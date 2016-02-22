@@ -11,6 +11,7 @@
   "dependencies": {
     "dateformat": "^1.0.12",
     "irc": "^0.4.1",
-    "random_fml": "^1.0.1"
+    "random_fml": "^1.0.1",
+    "weather-js": "^1.0.2"
   }
 }
