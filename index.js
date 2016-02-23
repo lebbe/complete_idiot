@@ -18,7 +18,7 @@ client.addListener('message', function (from, to, message) {
 	}
 
 	if(/^\?w /.test(message)) {
-		let search = message.split(' ').splice(1).join('').trim()
+		let search = message.split(' ').splice(1).join(' ').trim()
 
 		if(!search) return
 
