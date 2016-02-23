@@ -18,7 +18,8 @@ client.addListener('message', function (from, to, message) {
 	}
 
 	if(/^\?w /.test(message)) {
-		let search = message.split(' ')[1]
+		let search = message.split(' ').splice(1).join('').trim()
+
 		if(!search) return
 
 		weather.find({search, degreeType: 'C'}, function(err, result) {
