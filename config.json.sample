@@ -1,0 +1,14 @@
+{
+	"server": "irc.homelien.no",
+	"botnick": "someBotNick",
+	"channels": ["#someChannel"],
+	"operators": {
+		"someChannel": [
+			{
+				"nick": "some_nick",
+				"user": "~some_host",
+				"host": "127.0.0.1"
+			}
+		]
+	}
+}

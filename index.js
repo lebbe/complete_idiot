@@ -5,8 +5,10 @@ const irc = require('irc')
 const weather = require('weather-js')
 const insult = require('shakespeare-insult')
 
-let client = new irc.Client('irc.homelien.no', 'thorstone', {
-	channels: ['#complete_idiots']
+const config = require('./config')
+
+let client = new irc.Client(config.server, config.botnick, {
+	channels: config.channels
 })
 
 const urlSnatcher = require('./urlSnatcher.js')(client)
@@ -54,3 +56,25 @@ client.addListener('message', function (from, to, message) {
 }).addListener('error', function(message) {
     console.log('error: ', message)
 })
+
+function setupChannelJoinListener(channel, operators) {
+  client.addListener('join' + channel, function(nick, message) {
+    operators.forEach(function(operator) {
+
+      if(!new RegExp(operator.nick).test(message.nick)) return
+      if(!new RegExp(operator.user).test(message.user)) return
+      if(!new RegExp(operator.host).test(message.host)) return
+
+      setTimeout(function() {
+        client.send('MODE', channel, '+o', message.nick)
+      }, 1500)
+    })
+  })
+}
+
+for(let channel in config.operators) {
+  setupChannelJoinListener(channel, config.operators[channel])
+}
+
+
+
