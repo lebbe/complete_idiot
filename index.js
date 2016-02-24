@@ -42,16 +42,15 @@ client.addListener('message', function (from, to, message) {
 
   			client.say(to, info.join(''))
         return
-		});
-
-    if(/^\?insult/.test(message)) {
-      let nick = args.length === 2 ? args[1] : from
-      client.say(to, nick + ': You ' + insult.random() + '.')
-      return
-    }
-		return
+    });
 	}
 
+  if(/^\?insult/.test(message)) {
+    let nick = args.length === 2 ? args[1] : from
+    client.say(to, nick + ': You ' + insult.random() + '.')
+    return
+  }
+  return
 	urlSnatcher(from, to, message)
 }).addListener('error', function(message) {
     console.log('error: ', message)
