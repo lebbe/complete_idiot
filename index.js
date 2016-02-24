@@ -3,6 +3,7 @@
 const fml = require('random_fml')
 const irc = require('irc')
 const weather = require('weather-js')
+const insult = require('shakespeare-insult')
 
 let client = new irc.Client('irc.homelien.no', 'thorstone', {
 	channels: ['#complete_idiots']
@@ -11,6 +12,7 @@ let client = new irc.Client('irc.homelien.no', 'thorstone', {
 const urlSnatcher = require('./urlSnatcher.js')(client)
 
 client.addListener('message', function (from, to, message) {
+  let args = message.trim().split(/\s/)
 
 	if(/^\?fml/.test(message)) {
 		fml().then(fml => client.say(to, fml))
@@ -39,7 +41,14 @@ client.addListener('message', function (from, to, message) {
   			info.push('windspeed: ' + current.windspeed)
 
   			client.say(to, info.join(''))
+        return
 		});
+
+    if(/^\?insult/.test(message)) {
+      let nick = args.length === 2 ? args[1] : from
+      client.say(to, nick + ': You ' + insult.random() + '.')
+      return
+    }
 		return
 	}
 
