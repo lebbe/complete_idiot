@@ -50,7 +50,6 @@ client.addListener('message', function (from, to, message) {
     client.say(to, nick + ': Thou ' + insult.random() + '.')
     return
   }
-  return
 	urlSnatcher(from, to, message)
 }).addListener('error', function(message) {
     console.log('error: ', message)
