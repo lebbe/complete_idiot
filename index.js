@@ -47,7 +47,7 @@ client.addListener('message', function (from, to, message) {
 
   if(/^\?insult/.test(message)) {
     let nick = args.length === 2 ? args[1] : from
-    client.say(to, nick + ': You ' + insult.random() + '.')
+    client.say(to, nick + ': Thou ' + insult.random() + '.')
     return
   }
   return
