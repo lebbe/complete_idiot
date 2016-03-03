@@ -7,6 +7,15 @@ const insult = require('shakespeare-insult')
 
 const config = require('./config')
 
+const LastFmNode = require('lastfm').LastFmNode
+
+const lfm = new LastFmNode({
+  'api_key' : config.lastfm.api_key,
+  'secret' : config.lastfm.secret
+})
+
+console.log(lfm)
+
 let client = new irc.Client(config.server, config.botnick, {
 	channels: config.channels
 })
@@ -20,6 +29,24 @@ client.addListener('message', function (from, to, message) {
 		fml().then(fml => client.say(to, fml))
 		return
 	}
+
+  if(/^\?lfm/.test(message)) {
+    let user = args[1]
+    if(!user) return
+
+    lfm.request('user.getRecentTracks', {user: user, limit: 1})
+      .on('success', function(what) {
+        let track = what.recenttracks.track[0]
+
+        client.say(to, user + ' last scrobbled: ' + track.artist['#text'] +
+        ' - ' + track.name + ' on ' + track.date['#text'])
+
+      }).on('error', function() {
+        client.say(to, 'Error finding last scrobble from ' + user + '.')
+      })
+
+    return
+  }
 
 	if(/^\?w /.test(message)) {
 		let search = message.split(' ').splice(1).join(' ').trim()

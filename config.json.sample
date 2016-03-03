@@ -10,5 +10,10 @@
 				"host": "127.0.0.1"
 			}
 		]
+	},
+	"lastfm": {
+		"api_key": "key goes here",
+		"secret": "secret goes here"
+		// Registered to lebchen, application name complete_idiot
 	}
 }
