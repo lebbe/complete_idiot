@@ -38,6 +38,12 @@ client.addListener('message', function (from, to, message) {
       .on('success', function(what) {
         let track = what.recenttracks.track[0]
 
+        if(track['@attr'] && track['@attr'].nowplaying) {
+          client.say(to, user + ' is now playing ' + track.artist['#text'] +
+                         ' - ' + track.name + '!')
+          return
+        }
+
         client.say(to, user + ' last scrobbled: ' + track.artist['#text'] +
         ' - ' + track.name + ' on ' + track.date['#text'])
 
