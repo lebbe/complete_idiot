@@ -62,7 +62,9 @@ client.addListener('message', function (from, to, message) {
 		weather.find({search, degreeType: 'C'}, function(err, result) {
   			if(err) {
   				console.log(err)
-  				client.say(to, 'Error finding weather information about ' + search + '.')
+          let message = 'Error finding weather information about ' + search +
+                        '. ' + 'Try to live in a place that exists on the map.'
+  				client.say(to, message)
   				return
   			}
 
