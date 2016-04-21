@@ -116,7 +116,10 @@ module.exports = function setupUrlSnatcher(client) {
 		request(lastUrl, function (error, response, body) {
 			if (!error && response.statusCode == 200) {
 				let $ = cheerio.load(body)
-				let title = $('title').text()
+				let title = $('title')
+				               .text()
+				               .substring(0, 400) // Dont overflow
+				               .replace(/\s+/g, ' ') // Keep whitespace simple
 				if(title) {
 					client.say(to, title)
 				}
