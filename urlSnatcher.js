@@ -2,6 +2,8 @@
 
 const fs = require('fs')
 const dateFormat = require('dateformat')
+const request = require('request')
+const cheerio = require('cheerio')
 
 module.exports = function setupUrlSnatcher(client) {
 	// urls is a tab separated file
@@ -94,20 +96,31 @@ module.exports = function setupUrlSnatcher(client) {
 			return;
 		}
 
-		let i = 0
+		let lastUrl
 		extractUrls(text).forEach(url => {
-			i++
+			lastUrl = url
 			urls.push({
 				nick,
 				timestamp: new Date().getTime(),
 				url
 			})
 		})
-		if(i == 0) return
+		if(lastUrl === undefined) return
 		let urlFile = urls.map(url => {
 			return url.nick + '\t' + url.timestamp + '\t' + url.url
 		}).join('\n')
 
 		fs.writeFileSync('./urls.txt', urlFile, 'utf8')
+
+
+		request(lastUrl, function (error, response, body) {
+			if (!error && response.statusCode == 200) {
+				let $ = cheerio.load(body)
+				let title = $('title').text()
+				if(title) {
+					client.say(to, title)
+				}
+			}
+		})
 	}
 }

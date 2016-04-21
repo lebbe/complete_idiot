@@ -9,10 +9,12 @@
   "author": "Lars-Erik Bruce",
   "license": "ISC",
   "dependencies": {
+    "cheerio": "^0.20.0",
     "dateformat": "^1.0.12",
     "irc": "^0.4.1",
     "lastfm": "^0.9.2",
     "random_fml": "^1.0.1",
+    "request": "^2.72.0",
     "shakespeare-insult": "^1.0.0",
     "weather-js": "^1.0.2"
   }
