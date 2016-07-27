@@ -1,3 +1,7 @@
+'use strict'
+
+const log = msg => process.stdout.write(`${msg}\n`)
+
 const omdb = new (require('omdb-api-client'))()
 
 module.exports = function setupUrlSnatcher(client) {
@@ -18,7 +22,9 @@ module.exports = function setupUrlSnatcher(client) {
 			client.say(to, strb.join(' '))
 			client.say(to, movie.plot.substring(0, 250))
 		}).catch(function(err) {
-			client.say(to, 'Error retrieving movie information based on title from omdb.')
-		});
+			log(err.message)
+			client.say(to,
+				'Error retrieving movie information based on title from omdb.')
+		})
 	}
 }

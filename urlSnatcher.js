@@ -10,7 +10,7 @@ module.exports = function setupUrlSnatcher(client) {
 	// nick\ttimestamp\turl
 	let urlFile = fs.readFileSync('./urls.txt', 'utf8')
 
-	let urls = [];
+	let urls = []
 
 	urlFile.split('\n').forEach(line => {
 		let splitLine = line.split('\t')
@@ -29,9 +29,9 @@ module.exports = function setupUrlSnatcher(client) {
 	}
 
 	let commands = {
-		last: function(nick, to, args, text) {
+		last: function(nick, to, args) {
 			if(args.length === 3) {
-				var i = urls.length - 1
+				let i = urls.length - 1
 
 				while(--i) {
 					let url = urls[i]
@@ -47,15 +47,15 @@ module.exports = function setupUrlSnatcher(client) {
 			client.say(to, formatUrl(url))
 		},
 
-		source: function(nick, to, args, text) {
+		source: function(nick, to, args) {
 			if(args.length === 2) {
 				client.say(nick, 'Usage: "?url source youtube" will' +
-				                 'give you all youtube urls')
+					'give you all youtube urls')
 				return
 			}
 			let foundUrls = 0
 			for(let i = urls.length - 1; i >= 0; i--) {
-				let url = urls[i];
+				let url = urls[i]
 
 				let domain = url.url.match(/https?:\/\/([^\s\/]+)/)[1]
 
@@ -80,7 +80,7 @@ module.exports = function setupUrlSnatcher(client) {
 			let args = text.trim().split(' ')
 
 			if(args.length === 1) {
-				var cs = []
+				let cs = []
 				for(let command in commands)
 					cs.push(command)
 				
@@ -93,7 +93,7 @@ module.exports = function setupUrlSnatcher(client) {
 
 			if(command) command(nick, to, args, text)
 
-			return;
+			return
 		}
 
 		let lastUrl
@@ -113,13 +113,13 @@ module.exports = function setupUrlSnatcher(client) {
 		fs.writeFileSync('./urls.txt', urlFile, 'utf8')
 
 
-		request(lastUrl, function (error, response, body) {
-			if (!error && response.statusCode == 200) {
+		request(lastUrl, function callback(error, response, body) {
+			if (!error && response.statusCode === 200) {
 				let $ = cheerio.load(body)
 				let title = $('title')
-				               .text()
-				               .substring(0, 400) // Dont overflow
-				               .replace(/\s+/g, ' ') // Keep whitespace simple
+					.text()
+					.substring(0, 400) // Dont overflow
+					.replace(/\s+/g, ' ') // Keep whitespace simple
 				if(title) {
 					client.say(to, title)
 				}

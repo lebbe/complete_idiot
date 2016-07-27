@@ -1,5 +1,7 @@
 'use strict'
 
+const log = msg => process.stdout.write(`${msg}\n`)
+
 const fml = require('random_fml')
 const irc = require('irc')
 const weather = require('weather-js')
@@ -14,7 +16,7 @@ const lfm = new LastFmNode({
 	'secret' : config.lastfm.secret
 })
 
-console.log(lfm)
+log('lfm loaded')
 
 let client = new irc.Client(config.server, config.botnick, {
 	channels: config.channels
@@ -24,7 +26,7 @@ let client = new irc.Client(config.server, config.botnick, {
 const urlSnatcher = require('./urlSnatcher.js')(client)
 const omdb = require('./omdb.js')(client)
 
-client.addListener('message', function (from, to, message) {
+client.addListener('message', function callback(from, to, message) {
 	let args = message.trim().split(/\s/)
 
 	if(/^\?fml/.test(message)) {
@@ -41,13 +43,15 @@ client.addListener('message', function (from, to, message) {
 				let track = what.recenttracks.track[0]
 
 				if(track['@attr'] && track['@attr'].nowplaying) {
-					client.say(to, user + ' is now playing ' + track.artist['#text'] +
-												 ' - ' + track.name + '!')
+					client.say(to, user + ' is now playing ' +
+						track.artist['#text'] +
+						' - ' + track.name + '!')
 					return
 				}
 
-				client.say(to, user + ' last scrobbled: ' + track.artist['#text'] +
-				' - ' + track.name + ' on ' + track.date['#text'])
+				client.say(to, user + ' last scrobbled: ' +
+					track.artist['#text'] +
+					' - ' + track.name + ' on ' + track.date['#text'])
 
 			}).on('error', function() {
 				client.say(to, 'Error finding last scrobble from ' + user + '.')
@@ -63,9 +67,11 @@ client.addListener('message', function (from, to, message) {
 
 		weather.find({search, degreeType: 'C'}, function(err, result) {
 				if(err) {
-					console.log(err)
-					let message = 'Error finding weather information about ' + search +
-												'. ' + 'Try to live in a place that exists on the map.'
+					log(err)
+					let message = 'Error finding weather information about ' +
+					search + '. ' +
+					'Try to live in a place that exists on the map.'
+
 					client.say(to, message)
 					return
 				}
@@ -81,7 +87,7 @@ client.addListener('message', function (from, to, message) {
 
 				client.say(to, info.join(''))
 				return
-		});
+		})
 	}
 
 	if(/^\?insult/.test(message)) {
@@ -94,7 +100,7 @@ client.addListener('message', function (from, to, message) {
 	omdb(from, to, message)
 	urlSnatcher(from, to, message)
 }).addListener('error', function(message) {
-		console.log('error: ', message)
+		log('error: ', message)
 })
 
 function setupChannelJoinListener(channel, operators) {
